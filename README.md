@@ -5,7 +5,7 @@ Bosh Backup and restore (BBR) applied to TKGI : https://docs.pivotal.io/pks/1-7/
 
 This repository includes scripts to facilitate the setup and use of BBR in TKGI.
 
-The scripts are meant to be run from a linux jumbox that has network access to the TKGI environment.
+The scripts are meant to be run from a linux jumpbox that has network access to the TKGI environment.
 
 Steps : 
 1) edit file "env-epmc" to set values for your environment
