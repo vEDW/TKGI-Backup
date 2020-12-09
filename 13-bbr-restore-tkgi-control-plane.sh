@@ -22,7 +22,7 @@ echo "Performing TKGI control plane backup"
 
 PKSDeployGuid=$(bosh -e pks deployments --json | jq -r '.Tables[].Rows[] | select(.name | contains("pivotal-container-service")) | .name')
 
-if [[ ! -e $PKSDeployGuid ]]; then
+if [[ -z "$PKSDeployGuid" ]]; then
     echo "TKGI control plane deployment not found in Bosh director."
     echo "please restore bosh director state and verify deployment"
     exit
