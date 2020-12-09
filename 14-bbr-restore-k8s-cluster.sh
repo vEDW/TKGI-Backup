@@ -18,17 +18,12 @@ BOSH_CLIENT_CREDENTIAL=$( om -t https://${OPSMANAGER} -u "${ADMIN}" -p "${OPSMAN
 export $BOSH_CLIENT_CREDENTIAL
 
 echo
-echo "Performing TKGI control plane backup"
+echo "Performing k8s cluster definition restore"
 
-PKSDeployGuid=$(bosh -e pks deployments --json | jq -r '.Tables[].Rows[] | select(.name | contains("pivotal-container-service")) | .name')
+DeployGuid=$(echo $1 | cut -d'_' -f 1,2)
+echo "deployment ID : " + $DeployGuid
 
-if [[ ! -e $PKSDeployGuid ]]; then
-    echo "TKGI control plane deployment not found in Bosh director."
-    echo "please restore bosh director state and verify deployment"
-    exit
-fi
-
-nohup bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $PKSDeployGuid --ca-cert ca.crt restore --artifact-path $1
+nohup bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $DeployGuid --ca-cert ca.crt restore --artifact-path $1
 
 echo "restore of TKGI control plane done"
 echo
