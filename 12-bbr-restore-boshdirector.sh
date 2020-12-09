@@ -3,6 +3,10 @@
 source env_epmc
 
 
+if [[ ! -e $1 ]]; then
+    echo "missing artifact path."
+    exit
+fi
 # Verify your BBR Version : done with script 9_bbr_cli.sh
 
 echo "getting bosh credentials"
@@ -17,21 +21,6 @@ export $BOSH_CLIENT_CREDENTIAL
 echo
 echo "Performing director backup"
 
-bbr director  --host $DIRECTOR  --username bbr --private-key-path bbr_key.pem  backup
+nohup bbr director --host $DIRECTOR  --username bbr --private-key-path bbr_key.pem  restore --artifact-path $1
 
-echo
-echo "Performing TKGI control plane backup"
-
-bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $PKSDeployGuid --ca-cert ca.crt backup
-
-#Retrieve Your Cluster Deployment Names
-
-echo
-echo "Performing k8s clusters backup"
-
-k8sClusters=$(bosh -e pks deployments --json | jq -r '.Tables[].Rows[] | select(.name | contains("service-instance_")) | .name')
-for CLUSTERUUID in ${k8sClusters[@]}
-do
-    bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $CLUSTERUUID --ca-cert ca.crt backup
-done
-
+echo "Done."
