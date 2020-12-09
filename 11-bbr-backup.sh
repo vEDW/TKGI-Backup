@@ -22,6 +22,7 @@ bbr director  --host $DIRECTOR  --username bbr --private-key-path bbr_key.pem  b
 echo
 echo "Performing TKGI control plane backup"
 
+PKSDeployGuid=$(bosh -e pks deployments --json | jq -r '.Tables[].Rows[] | select(.name | contains("pivotal-container-service")) | .name')
 bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $PKSDeployGuid --ca-cert ca.crt backup
 
 #Retrieve Your Cluster Deployment Names
@@ -35,3 +36,5 @@ do
     bbr deployment --target $DIRECTOR  --username $BOSH_CLIENT --deployment $CLUSTERUUID --ca-cert ca.crt backup
 done
 
+echo "bbr backup done"
+echo "remember to backup NSX-T as well if applicable "
