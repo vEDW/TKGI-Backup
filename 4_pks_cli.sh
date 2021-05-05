@@ -17,6 +17,7 @@ fi
 # pks cli
 pivnet login --api-token=$APIREFRESHTOKEN
 PKSFileID=`pivnet pfs -p pivotal-container-service -r $PKSRELEASE | grep 'PKS CLI - Linux' | awk '{ print $2}'`
+pivnet accept-eula -p pivotal-container-service -r $PKSRELEASE
 pivnet download-product-files -p pivotal-container-service -r $PKSRELEASE -i $PKSFileID
 
 mv pks-linux-amd64* pks 
